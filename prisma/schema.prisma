@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Orte {
+  id         Int       @default(autoincrement())
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  PLZ        String    @id @db.VarChar(255)
+  Name       String?   @db.VarChar(255)
+  Pfleger    Pfleger[]
+}
+
+model Pfleger {
+  id          Int      @id @default(autoincrement())
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  LastName    String   @db.VarChar(255)
+  FirstName   String   @db.VarChar(255)
+  PLZ         String   @db.VarChar(255)
+  Phonenumber String   @db.VarChar(255)
+  Orte        Orte     @relation(fields: [PLZ], references: [PLZ], onDelete: NoAction, onUpdate: NoAction, map: "Pfleger_relation_1")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Tier_hat_Pfleger {
+  Pfleger_ID String @db.VarChar(255)
+  Tier_ID    String @db.VarChar(255)
+  @@id([Pfleger_ID, Tier_ID])
+  @@map("Tier hat Pfleger")
+
+}
+
+model Tiere {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  Art        String   @db.VarChar(255)
+  Name       String   @db.VarChar(255)
+  Revier     String   @db.VarChar(255)
+  Gebaeude   String   @db.VarChar(255)
+}
