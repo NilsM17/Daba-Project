@@ -26,36 +26,36 @@ export default async function Home() {
     PLZ: string;
   }
 
-  const pfleger = await prisma.pfleger.findMany();
-  const orte = await prisma.orte.findMany();
+
+  const tiere = await prisma.tiere.findMany();
+  const tierart = await prisma.tierArten.findMany();
+  const Futter = await prisma.futter.findMany();
 
   return (
     <Box>
       <h1 className={styles.title}> Welcome to Daba Project</h1>
-      <Button sx={{ textTransform: "capitalize", marginRight: 1 }}  variant="contained" color="primary" href="/Pfleger" >
-        Pfleger
-      </Button>
-      <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href="/Ort">
-        Orte
-      </Button>
-      <Button sx={{ textTransform: "capitalize" }} variant="contained" color="primary" href="/Tiere">
-        Tiere
-      </Button>
+  
       <Table>
         <TableHead >
-          <TableCell sx={{ color: "white" }}>Lastname</TableCell>
-          <TableCell sx={{ color: "white" }}>Firstname</TableCell>
-          <TableCell sx={{ color: "white" }}>Ort</TableCell>
-          <TableCell sx={{ color: "white" }}>Phonenumber</TableCell>
+          <TableCell >Art</TableCell>
+          <TableCell >Name</TableCell>
+          <TableCell >Revier</TableCell>
+          <TableCell >Gebaeude</TableCell>
+          <TableCell >Fütterung</TableCell>
         </TableHead>
-        {pfleger.map((p) => {
-          const ort = orte.find((o) => o.PLZ === p.PLZ);
+        {tiere.map((t) => {
+          const tierarten = tierart.find((a) => t.Name === a.TierName);
+          const futterTier = Futter.find((f) => f.TierArt === tierarten?.Art);
+
+          
+          const ZeitbisFutter = futterTier ? `${Math.abs(new Date(futterTier.Uhrzeit).getHours() - new Date().getHours())} Stunden und ${Math.abs(new Date(futterTier.Uhrzeit).getMinutes() - new Date().getMinutes())} Minuten` : "Unknown";
           return (
-            <TableRow key={p.id}>
-              <TableCell>{p.LastName}</TableCell>
-              <TableCell>{p.FirstName}</TableCell>
-              <TableCell>{ort ? ort.Name : "Unknown"}</TableCell>
-              <TableCell>{p.Phonenumber}</TableCell>
+            <TableRow key={t.id}>
+              <TableCell>{tierarten ? tierarten.Art : "Unkown"}</TableCell>
+              <TableCell>{t.Name}</TableCell>
+              <TableCell>{tierarten ? tierarten.Revier : "Unkown"}</TableCell>
+              <TableCell>{tierarten ? tierarten.Geb_ude : "Unkown"}</TableCell>
+              <TableCell>{ZeitbisFutter}</TableCell>
             </TableRow>
           );
         })}
