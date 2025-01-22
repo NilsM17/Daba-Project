@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Futter {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  Futter  String
+  TierArt String
+  Uhrzeit String
+}
+
+model Orte {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  Name       String
+  PLZ        String
+  created_at String
+}
+
+model Pfleger {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  FirstName   String
+  LastName    String
+  PLZ         String
+  Phonenumber String
+  created_at  String
+}
+
+model TierArten {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  Art      String
+  Geb_ude  String @map("Gebäude")
+  Revier   String
+  TierName String
+}
+
+model Tiere {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  Name       String
+  Pfleger    String
+  created_at String
+}
+
+model user {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  password   String
+  token      String
+  userRights Boolean
+  username   String
+}
