@@ -3,7 +3,7 @@ import { prisma } from '@/db';
 import { Table, TableHead, TableCell, TableRow, Button } from '@mui/material';
 import React from 'react'
 import axios from 'axios';
-import { PflegerToken } from '../Pfleger/PflegerToken';
+import { PflegerToken } from '../PflegerToken';
 
 
 async function Ort() {

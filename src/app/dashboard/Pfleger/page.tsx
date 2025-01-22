@@ -3,7 +3,7 @@ import { Box, Button, Table, TableCell, TableHead, TableRow } from '@mui/materia
 import axios from 'axios';
 import React, { useEffect } from 'react'
 import { checkLocalStorage, setToken, checkToken } from '../checkToken';
-import { PflegerToken } from './PflegerToken';
+import { PflegerToken } from '../PflegerToken';
 
 
 interface Pfleger {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { checkLocalStorage, setToken, checkToken } from '../checkToken';
+import { checkLocalStorage, setToken, checkToken } from './checkToken';
 
 export function PflegerToken() {
   useEffect(() => {

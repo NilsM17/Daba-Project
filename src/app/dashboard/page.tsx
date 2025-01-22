@@ -4,7 +4,7 @@ import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { checkLocalStorage, checkToken, setToken } from './checkToken';
 import { checkDatabaseConnection } from './checkDB';
-import { PflegerToken } from './Pfleger/PflegerToken';
+import { PflegerToken } from './PflegerToken';
 function AdminDashboard() {
   const [dbStatus, setDbStatus] = useState('Checking...');
 

@@ -1,7 +1,7 @@
 'use server';
 import { getTiere, getPfleger, getTierart } from './getTiere';
 import TiereTable from './TierTable';
-import { PflegerToken } from '../Pfleger/PflegerToken';
+import { PflegerToken } from '../PflegerToken';
 import { Box } from '@mui/material';
 async function Tiere() {
   const tiere = await getTiere(); // Server-side function
