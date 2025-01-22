@@ -3,6 +3,7 @@ import { prisma } from '@/db';
 import { Table, TableHead, TableCell, TableRow, Button } from '@mui/material';
 import React from 'react'
 import axios from 'axios';
+import { PflegerToken } from '../Pfleger/PflegerToken';
 
 
 async function Ort() {
@@ -55,6 +56,7 @@ async function Ort() {
 
     return (
         <div>
+            <PflegerToken />
             <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href='Ort'>
                 Add missing locations
             </Button>

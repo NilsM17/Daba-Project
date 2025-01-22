@@ -48,6 +48,7 @@ model Tiere {
 model user {
   id         String  @id @default(auto()) @map("_id") @db.ObjectId
   password   String
+  token      String
   userRights Boolean
   username   String
 }

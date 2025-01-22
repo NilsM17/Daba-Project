@@ -1,49 +1,89 @@
 'use client';
 
-import { Box, TextField, Button } from '@mui/material'
-import React from 'react'
-import { login } from './login';
-import { setToken } from '../dashboard/checkToken';
+import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { login } from './login'; // Server-side function
+import { setToken } from '../dashboard/checkToken'; // Client-side token setter
 
-function loginpage() {
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [id, setId] = useState('');
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const token = await login(username, password); // Call server-side function
+
+      if (token) {
+        setToken(token); // Set token in memory
+        localStorage.setItem('bearerToken', token); // Persist token in localStorage
+        localStorage.setItem('id', id); // Persist username in localStorage
+        window.location.href = '/dashboard'; // Redirect to dashboard
+      } else {
+        setError('Invalid username or password');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Box>
-        <TextField
-            id="username"
-            label="Username"
-            variant="outlined"
-            onChange={(e) => { setUsername(e.target.value) }}
-        />
-        <TextField
-            id="password"
-            label="Password"
-            variant="outlined"
-            onChange={(e) => { setPassword(e.target.value) }}
-            type="password"
-        />
-        <Button
-            sx={{ background: "white", color: "light-blue" }}
-            onClick={() => {
-                login(username, password).then((token) => {
-                    if (token) {
-                        setToken(token);
-                        console.log(token);
-                        localStorage.setItem('bearerToken', token);
-                        window.location.href = '/dashboard';
-                    } else {
-                        alert('Login failed');
-                    }
-                });
-            }}
-            disabled={!username || !password}
-        >
-            Login
-        </Button>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      bgcolor="#f0f0f0"
+      p={4}
+      borderRadius={2}
+      boxShadow={3}
+    >
+      <Typography variant="h4" mb={3}>
+        Login
+      </Typography>
+      {error && (
+        <Typography color="error" mb={2}>
+          {error}
+        </Typography>
+      )}
+      <TextField
+        id="username"
+        label="Username"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <TextField
+        id="password"
+        label="Password"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleLogin}
+        disabled={!username || !password || loading}
+        fullWidth
+        sx={{ mt: 2 }}
+      >
+        {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+      </Button>
     </Box>
-  )
+  );
 }
 
-export default loginpage
+export default LoginPage;

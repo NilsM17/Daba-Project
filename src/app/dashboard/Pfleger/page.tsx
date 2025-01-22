@@ -1,7 +1,9 @@
 import { prisma } from '@/db';
 import { Box, Button, Table, TableCell, TableHead, TableRow } from '@mui/material';
 import axios from 'axios';
-import React from 'react'
+import React, { useEffect } from 'react'
+import { checkLocalStorage, setToken, checkToken } from '../checkToken';
+import { PflegerToken } from './PflegerToken';
 
 
 interface Pfleger {
@@ -23,9 +25,11 @@ async function Pfleger() {
 
   const pfleger = await prisma.pfleger.findMany();
   const orte = await prisma.orte.findMany();
-
   return (
+
     <Box>
+      <PflegerToken />
+
       <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 1 }}>
 
         <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href="Pfleger/add" >

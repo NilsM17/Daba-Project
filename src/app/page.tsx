@@ -34,7 +34,9 @@ export default async function Home() {
   return (
     <Box>
       <h1 className={styles.title}> Welcome to Daba Project</h1>
-  
+      <Button variant="contained" color="primary" href="/Login">
+      login
+      </Button>
       <Table>
         <TableHead >
           <TableCell >Art</TableCell>

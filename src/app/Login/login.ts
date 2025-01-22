@@ -15,6 +15,15 @@ export async function login(username: string, password: string) {
         return null;
     }
     const token = crypto.randomBytes(32).toString('hex');
+    //put the token into the DB
+    await prisma.user.update({
+        where: {
+            id: user.id
+        },
+        data: {
+            token: token
+        }
+    });
 
     return token;
 }

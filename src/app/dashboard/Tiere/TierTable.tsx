@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableCell, TableHead, TableRow, TableBody } from '@mui/material';
 import { checkToken, checkLocalStorage } from '../checkToken';
 
@@ -28,12 +28,7 @@ interface TiereTableProps {
 }
 
 const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart }) => {
-    const token = localStorage.getItem('bearerToken');
-    if (token) {
-        checkToken(token);
-    }
     return (
-
         <Table>
             <TableHead>
                 <TableRow>
