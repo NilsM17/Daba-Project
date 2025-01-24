@@ -12,3 +12,6 @@ export async function getPfleger() {
 export async function getTierart() {
   return prisma.tierArten.findMany(); // Replace with your actual query
 }
+export async function getFutter() {
+  return prisma.futter.findMany(); // Replace with your actual query
+}

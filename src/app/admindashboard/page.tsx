@@ -25,21 +25,23 @@ function AdminDashboard() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+      
       <PflegerToken />
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
         <Button
           sx={{ textTransform: 'capitalize', marginRight: 1 }}
           variant="contained"
           color="primary"
-          href="dashboard/Pfleger"
+          href="admindashboard/Pfleger"
         >
           Pfleger
         </Button>
+        
         <Button
           sx={{ textTransform: 'capitalize', marginRight: 1 }}
           variant="contained"
           color="primary"
-          href="dashboard/Ort"
+          href="admindashboard/Ort"
         >
           Orte
         </Button>
@@ -47,7 +49,7 @@ function AdminDashboard() {
           sx={{ textTransform: 'capitalize', marginRight: 1 }}
           variant="contained"
           color="primary"
-          href="dashboard/Tiere"
+          href="admindashboard/Tiere"
         >
           Tiere
         </Button>

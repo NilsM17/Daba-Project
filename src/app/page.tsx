@@ -35,7 +35,7 @@ export default async function Home() {
     <Box>
       <h1 className={styles.title}> Welcome to Daba Project</h1>
       <Button variant="contained" color="primary" href="/Login">
-      login
+        login
       </Button>
       <Table>
         <TableHead >
@@ -49,8 +49,28 @@ export default async function Home() {
           const tierarten = tierart.find((a) => t.Name === a.TierName);
           const futterTier = Futter.find((f) => f.TierArt === tierarten?.Art);
 
-          
-          const ZeitbisFutter = futterTier ? `${Math.abs(new Date(futterTier.Uhrzeit).getHours() - new Date().getHours())} Stunden und ${Math.abs(new Date(futterTier.Uhrzeit).getMinutes() - new Date().getMinutes())} Minuten` : "Unknown";
+
+          const ZeitbisFutter = futterTier
+            ? (() => {
+              const [hours, minutes] = futterTier.Uhrzeit.split(":").map(Number); // Parse the Uhrzeit string
+              const now = new Date();
+              const currentTotalMinutes = now.getHours() * 60 + now.getMinutes(); // Convert current time to total minutes
+              const targetTotalMinutes = hours * 60 + minutes; // Convert target time to total minutes
+
+              let diffMinutes = targetTotalMinutes - currentTotalMinutes;
+
+              // Handle cases where the time crosses midnight
+              if (diffMinutes < 0) {
+                diffMinutes += 24 * 60; // Add 24 hours (in minutes) to wrap around
+              }
+
+              const diffHours = Math.floor(diffMinutes / 60); // Calculate hours
+              const remainingMinutes = diffMinutes % 60; // Calculate remaining minutes
+
+              return `${diffHours} Stunden und ${remainingMinutes} Minuten`;
+            })()
+            : "Unknown";
+
           return (
             <TableRow key={t.id}>
               <TableCell>{tierarten ? tierarten.Art : "Unkown"}</TableCell>

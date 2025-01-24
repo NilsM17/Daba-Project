@@ -35,6 +35,9 @@ async function Pfleger() {
         <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href="Pfleger/add" >
           ADD
         </Button>
+        <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href="Pfleger/editworktime" >
+          Arbeitszeit bearbeiten
+        </Button>
       </Box>
       <Table>
         <TableHead >

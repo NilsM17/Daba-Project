@@ -2,38 +2,55 @@
 
 import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
-import { login } from './login'; // Server-side function
-import { setToken } from '../dashboard/checkToken'; // Client-side token setter
+import { login, checkRights } from './login'; // Server-side function
+import { setToken } from '../admindashboard/checkToken'; // Client-side token setter
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [id, setId] = useState('');
 
   const handleLogin = async () => {
     setLoading(true);
     setError('');
+    const userRights = await checkRights(username, password);
 
-    try {
-      const token = await login(username, password); // Call server-side function
-
-      if (token) {
-        setToken(token); // Set token in memory
-        localStorage.setItem('bearerToken', token); // Persist token in localStorage
-        localStorage.setItem('id', id); // Persist username in localStorage
-        window.location.href = '/dashboard'; // Redirect to dashboard
-      } else {
-        setError('Invalid username or password');
+    if (await userRights === 'admin') {
+      try {
+        const token = await login(username, password); // Call server-side function
+        if (token) {
+          setToken(token); // Set token in memory
+          localStorage.setItem('bearerToken', token); // Persist token in localStorage
+          window.location.href = '/admindashboard'; // Redirect to dashboard
+        } else {
+          setError('Invalid username or password');
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        setError('Something went wrong. Please try again.');
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
     }
-  };
+    if (await userRights === 'pfleger') {
+      try {
+        const token = await login(username, password); // Call server-side function
+        if (token) {
+          setToken(token); // Set token in memory
+          localStorage.setItem('bearerToken', token); // Persist token in localStorage
+          window.location.href = '/pflegerdashboard'; // Redirect to dashboard
+        } else {
+          setError('Invalid username or password');
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        setError('Something went wrong. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  }
 
   return (
     <Box

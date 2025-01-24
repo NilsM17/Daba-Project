@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Arbeitszeiten {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  EndTime   String
+  StartTime String
+  badge     String
+}
+
 model Futter {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
   Futter  String
@@ -47,8 +54,10 @@ model Tiere {
 
 model user {
   id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  FirstName  String?
+  LastName   String?
   password   String
   token      String
-  userRights Boolean
+  userRights String
   username   String
 }

@@ -20,14 +20,20 @@ interface Tierart {
     Revier: string;
     Geb_ude: string;
 }
+interface Futter {
+    TierArt: string;
+    Futter: string;
+    Uhrzeit: string;
+}
 
 interface TiereTableProps {
     tiere: Tiere[];
     pfleger: Pfleger[];
     tierart: Tierart[];
+    futter: Futter[];
 }
 
-const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart }) => {
+const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart, futter }) => {
     return (
         <Table>
             <TableHead>
@@ -38,24 +44,27 @@ const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart }) => {
                     <TableCell>Gebäude</TableCell>
                     <TableCell>Pfleger Vorname</TableCell>
                     <TableCell>Pfleger Nachname</TableCell>
+                    <TableCell>Fütterung</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {tiere.map((t) => {
                     const pflegerer = pfleger.find((p) => t.Pfleger === p.LastName);
                     const tierarten = tierart.find((a) => t.Name === a.TierName);
-
-                    return (
-                        <TableRow key={t.id}>
-                            <TableCell>{tierarten ? tierarten.Art : 'Unknown'}</TableCell>
-                            <TableCell>{t.Name}</TableCell>
-                            <TableCell>{tierarten ? tierarten.Revier : 'Unknown'}</TableCell>
-                            <TableCell>{tierarten ? tierarten.Geb_ude : 'Unknown'}</TableCell>
-                            <TableCell>{pflegerer ? pflegerer.FirstName : 'Unknown'}</TableCell>
-                            <TableCell>{pflegerer ? pflegerer.LastName : 'Unknown'}</TableCell>
-                        </TableRow>
-                    );
-                })}
+                    const futterung = futter.find((f) => tierarten?.Art === f.TierArt);
+                    
+                        return (
+                            <TableRow key={t.id}>
+                                <TableCell>{tierarten ? tierarten.Art : 'Unknown'}</TableCell>
+                                <TableCell>{t.Name}</TableCell>
+                                <TableCell>{tierarten ? tierarten.Revier : 'Unknown'}</TableCell>
+                                <TableCell>{tierarten ? tierarten.Geb_ude : 'Unknown'}</TableCell>
+                                <TableCell>{pflegerer ? pflegerer.FirstName : 'Unknown'}</TableCell>
+                                <TableCell>{pflegerer ? pflegerer.LastName : 'Unknown'}</TableCell>
+                                <TableCell>{futterung?.Uhrzeit}</TableCell>
+                            </TableRow>
+                        );
+                    })}
             </TableBody>
         </Table>
     );
