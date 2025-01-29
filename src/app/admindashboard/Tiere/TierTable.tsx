@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Table, TableCell, TableHead, TableRow, TableBody } from '@mui/material';
+import { Table, TableCell, TableHead, TableRow, TableBody, Button, Box } from '@mui/material';
 import { checkToken, checkLocalStorage } from '../checkToken';
 
 interface Tiere {
@@ -35,24 +35,32 @@ interface TiereTableProps {
 
 const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart, futter }) => {
     return (
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Art</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Revier</TableCell>
-                    <TableCell>Gebäude</TableCell>
-                    <TableCell>Pfleger Vorname</TableCell>
-                    <TableCell>Pfleger Nachname</TableCell>
-                    <TableCell>Fütterung</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {tiere.map((t) => {
-                    const pflegerer = pfleger.find((p) => t.Pfleger === p.LastName);
-                    const tierarten = tierart.find((a) => t.Name === a.TierName);
-                    const futterung = futter.find((f) => tierarten?.Art === f.TierArt);
-                    
+        <Box>
+            <Button variant="contained" color="primary" href="Tiere/add">
+                ADD
+            </Button>
+            <Button variant='contained' color='primary' href='Tiere/addFutter'>
+
+                Add Futter
+            </Button>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Art</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Revier</TableCell>
+                        <TableCell>Gebäude</TableCell>
+                        <TableCell>Pfleger Vorname</TableCell>
+                        <TableCell>Pfleger Nachname</TableCell>
+                        <TableCell>Fütterung</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {tiere.map((t) => {
+                        const pflegerer = pfleger.find((p) => t.Pfleger === p.LastName);
+                        const tierarten = tierart.find((a) => t.id === a.TierName);
+                        const futterung = futter.find((f) => tierarten?.Art === f.TierArt);
+
                         return (
                             <TableRow key={t.id}>
                                 <TableCell>{tierarten ? tierarten.Art : 'Unknown'}</TableCell>
@@ -65,8 +73,9 @@ const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart, futter
                             </TableRow>
                         );
                     })}
-            </TableBody>
-        </Table>
+                </TableBody>
+            </Table>
+        </Box>
     );
 };
 

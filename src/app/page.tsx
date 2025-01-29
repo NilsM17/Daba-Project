@@ -46,7 +46,7 @@ export default async function Home() {
           <TableCell >Fütterung</TableCell>
         </TableHead>
         {tiere.map((t) => {
-          const tierarten = tierart.find((a) => t.Name === a.TierName);
+          const tierarten = tierart.find((a) => t.id === a.TierName);
           const futterTier = Futter.find((f) => f.TierArt === tierarten?.Art);
 
 
