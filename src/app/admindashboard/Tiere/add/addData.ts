@@ -4,31 +4,25 @@ import { prisma } from "@/db";
 
 export async function addData(tierName: string, pfleger: string, tierArt: string, gebaeude: string, Revier: string) {
 
-    await prisma.tiere.create({
-        data: {
-            Name: tierName,
-            Pfleger: pfleger,
-            created_at: new Date().toISOString()
-        }
-    });
-    const tierID = await prisma.tiere.findFirst({
+   const tierartID = await prisma.tierArten.findFirst({
         where: {
-            Name: tierName
+            Art: tierArt
         },
         select: {
             id: true
         }
     });
-    if (tierID?.id) {
-        await prisma.tierArten.create({
-            data: {
-                Art: tierArt,
-                Geb_ude: gebaeude,
-                Revier: Revier,
-                TierName: tierID.id,
-            }
-        });
-    } else {
-        throw new Error("Tier ID not found");
-    }
+    await prisma.tiere.create({
+        data: {
+            Name: tierName,
+            Pfleger: pfleger,
+            created_at: new Date().toISOString(),
+            ArtenID: tierartID ? tierartID.id : '' // Assuming tierArt is the ID for the type of animal
+        }
+    });
+
+
+}
+export async function getTierArten() {
+    return await prisma.tierArten.findMany();
 }

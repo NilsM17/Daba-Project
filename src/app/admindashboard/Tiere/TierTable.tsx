@@ -7,6 +7,7 @@ interface Tiere {
     id: string;
     Name: string;
     Pfleger: string;
+    ArtenID: string;
 }
 
 interface Pfleger {
@@ -15,8 +16,8 @@ interface Pfleger {
 }
 
 interface Tierart {
+    id: string;
     Art: string;
-    TierName: string;
     Revier: string;
     Geb_ude: string;
 }
@@ -43,6 +44,9 @@ const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart, futter
 
                 Add Futter
             </Button>
+            <Button variant='contained' color='primary' href='Tiere/addArten'>
+                Add Arten
+            </Button>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -58,7 +62,7 @@ const TiereTable: React.FC<TiereTableProps> = ({ tiere, pfleger, tierart, futter
                 <TableBody>
                     {tiere.map((t) => {
                         const pflegerer = pfleger.find((p) => t.Pfleger === p.LastName);
-                        const tierarten = tierart.find((a) => t.id === a.TierName);
+                        const tierarten = tierart.find((a) => t.ArtenID === a.id);
                         const futterung = futter.find((f) => tierarten?.Art === f.TierArt);
 
                         return (

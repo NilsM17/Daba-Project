@@ -12,3 +12,6 @@ export async function addData(tierArt: string, futter: string, uhrzeit: string) 
         }
     });
 }
+export async function getTierArten() {
+    return await prisma.tierArten.findMany();
+}

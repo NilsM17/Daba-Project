@@ -38,15 +38,15 @@ model Pfleger {
 }
 
 model TierArten {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  Art      String
-  Geb_ude  String @map("Gebäude")
-  Revier   String
-  TierName String
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  Art     String
+  Geb_ude String @map("Gebäude")
+  Revier  String
 }
 
 model Tiere {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
+  ArtenID    String
   Name       String
   Pfleger    String
   created_at String

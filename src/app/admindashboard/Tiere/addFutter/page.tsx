@@ -1,8 +1,8 @@
 'use client';
 
-import { Table, TableHead, TableRow, TableCell, TextField, Button } from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TextField, Button, MenuItem, Select } from '@mui/material';
 import React from 'react';
-import { addData } from './addData';
+import { addData, getTierArten } from './addData';
 import { TimePicker } from 'rsuite'; // Import the RSuite TimePicker
 import 'rsuite/dist/rsuite.min.css'; // Ensure RSuite styles are included
 
@@ -21,7 +21,11 @@ function AddFutterung() {
     const handleTimeChange = (time: Date | null) => {
         setUhrzeit(formatTime(time)); // Store formatted time as HH:mm
     };
+    const [tierArtOptions, setTierArtOptions] = React.useState<{ id: string; Art: string; Geb_ude: string; Revier: string; }[]>([]);
 
+    React.useEffect(() => {
+        getTierArten().then(data => setTierArtOptions(data));
+    }, []);
     return (
         <div className="add-futterung-container">
             <Table>
@@ -35,11 +39,18 @@ function AddFutterung() {
                 </TableHead>
                 <TableRow>
                     <TableCell>
-                        <TextField
-                            id="tierName"
-                            variant="outlined"
+                        <Select
+                            value={tierArt}
                             onChange={(e) => setTierArt(e.target.value)}
-                        />
+                            displayEmpty
+                            variant='outlined'
+                            fullWidth
+                        >
+                            <MenuItem value="" disabled>Wähle eine Tierart</MenuItem>
+                            {tierArtOptions.map((option) => (
+                                <MenuItem key={option.id} value={option.Art}>{option.Art}</MenuItem>
+                            ))}
+                        </Select>
                     </TableCell>
                     <TableCell>
                         <TextField
