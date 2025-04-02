@@ -1,10 +1,13 @@
-import { prisma } from '@/db';
-import { Box, Button, Table, TableCell, TableHead, TableRow } from '@mui/material';
-import axios from 'axios';
-import React, { useEffect } from 'react'
-import { checkLocalStorage, setToken, checkToken } from '../checkToken';
-import { PflegerToken } from './PflegerToken';
+'use client';
 
+import { Box, Button, TableCell, TableRow, Card, Typography, Chip } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Layout } from '@/components/Layout';
+import { EnhancedTable } from '@/components/EnhancedTable';
+import AddIcon from '@mui/icons-material/Add';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonIcon from '@mui/icons-material/Person';
+import { styled } from '@mui/material/styles';
 
 interface Pfleger {
   id: string;
@@ -21,46 +24,148 @@ interface Ort {
   PLZ: string;
 }
 
-async function Pfleger() {
+const StyledButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(0, 1),
+  display: 'flex',
+  alignItems: 'center',
+  '& .MuiSvgIcon-root': {
+    marginRight: theme.spacing(1),
+  }
+}));
 
-  const pfleger = await prisma.pfleger.findMany();
-  const orte = await prisma.orte.findMany();
+const StatCard = styled(Card)(({ theme }) => ({
+  padding: theme.spacing(3),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: 120,
+  marginBottom: theme.spacing(3),
+}));
+
+function PflegerPage() {
+  const [pfleger, setPfleger] = useState<Pfleger[]>([]);
+  const [orte, setOrte] = useState<Ort[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch your data here using API routes
+        const pflegerRes = await fetch('/api/pfleger');
+        const orteRes = await fetch('/api/orte');
+        
+        const pflegerData = await pflegerRes.json();
+        const orteData = await orteRes.json();
+        
+        setPfleger(pflegerData);
+        setOrte(orteData);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
   return (
-
-    <Box>
-      <PflegerToken />
-
-      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 1 }}>
-
-        <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href="Pfleger/add" >
-          ADD
-        </Button>
-        <Button sx={{ textTransform: "capitalize", marginRight: 1 }} variant="contained" color="primary" href="Pfleger/editworktime" >
-          Arbeitszeit bearbeiten
-        </Button>
+    <Layout title="Pfleger Management">
+      {/* Rest of your component */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" fontWeight="bold" mb={3}>
+          Pfleger Übersicht
+        </Typography>
+        
+        <Box sx={{ display: 'flex', gap: 3, mb: 4 }}>
+          <StatCard>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Gesamtzahl Pfleger
+            </Typography>
+            <Typography variant="h3" color="primary" fontWeight="medium">
+              {pfleger.length}
+            </Typography>
+          </StatCard>
+          
+          <StatCard>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Aktive Standorte
+            </Typography>
+            <Typography variant="h3" color="primary" fontWeight="medium">
+              {new Set(pfleger.map(p => p.PLZ)).size}
+            </Typography>
+          </StatCard>
+        </Box>
       </Box>
-      <Table>
-        <TableHead >
-          <TableCell >Lastname</TableCell>
-          <TableCell >Firstname</TableCell>
-          <TableCell >Ort</TableCell>
-          <TableCell >Phonenumber</TableCell>
-        </TableHead>
+      
+      <EnhancedTable 
+        title="Pfleger Liste" 
+        headers={["Nachname", "Vorname", "Ort", "Telefonnummer", "Status"]}
+        actionButtons={
+          <Box>
+            <StyledButton
+              variant="contained"
+              color="primary"
+              href="Pfleger/add"
+              startIcon={<AddIcon />}
+            >
+              Neuer Pfleger
+            </StyledButton>
+            <StyledButton
+              variant="outlined"
+              color="secondary"
+              href="Pfleger/editworktime"
+              startIcon={<AccessTimeIcon />}
+            >
+              Arbeitszeit bearbeiten
+            </StyledButton>
+          </Box>
+        }
+      >
         {pfleger.map((p) => {
           const ort = orte.find((o) => o.PLZ === p.PLZ);
           return (
-            <TableRow key={p.id}>
+            <TableRow 
+              key={p.id} 
+              sx={{ 
+                '&:hover': { 
+                  backgroundColor: 'rgba(33, 150, 243, 0.04)',
+                  cursor: 'pointer' 
+                },
+                transition: 'background-color 0.2s'
+              }}
+            >
               <TableCell>{p.LastName}</TableCell>
               <TableCell>{p.FirstName}</TableCell>
-              <TableCell>{ort ? ort.Name : "Unkown"}</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  {ort ? ort.Name : "Unbekannt"}
+                  <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                    {p.PLZ}
+                  </Typography>
+                </Box>
+              </TableCell>
               <TableCell>{p.Phonenumber}</TableCell>
+              <TableCell>
+                <Chip 
+                  icon={<PersonIcon />} 
+                  label="Aktiv" 
+                  color="success" 
+                  size="small" 
+                  sx={{ borderRadius: 1 }} 
+                />
+              </TableCell>
             </TableRow>
           );
         })}
-      </Table>
-    </Box>
-  )
+      </EnhancedTable>
+    </Layout>
+  );
 }
 
-
-export default Pfleger
+export default PflegerPage;

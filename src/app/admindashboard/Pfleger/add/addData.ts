@@ -13,7 +13,8 @@ export async function addData(lastname: string, firstname: string, phonenumber: 
             FirstName: firstname,
             PLZ: ort,
             Phonenumber: phonenumber,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            badge: Math.floor(Math.random() * 1000000).toString().padStart(6, '0')
         }
     });
 

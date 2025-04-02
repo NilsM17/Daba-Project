@@ -26,3 +26,6 @@ export async function addData(tierName: string, pfleger: string, tierArt: string
 export async function getTierArten() {
     return await prisma.tierArten.findMany();
 }
+export async function getPfleger() {
+    return await prisma.pfleger.findMany();
+}

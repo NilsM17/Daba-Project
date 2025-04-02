@@ -2,66 +2,82 @@
 import { prisma } from '@/db';
 
 // Get the work time for a specific user (Jonas Kammering)
-export async function getTime(userToken: string) {
-    // Retrieve the session to get the user info
-
-
-
-    // Query the Arbeitszeiten table using the user ID from the session or token
+export async function getTime() {
     const allArbeitszeiten = await prisma.arbeitszeiten.findMany({
-        where: {
-            badge: userToken,  // Assuming userId is the identifier in the table
-        },
         select: {
             StartTime: true,
             EndTime: true,
+            badge: true,
+            id: true,
         },
     });
 
-    return allArbeitszeiten;  // Returns an array of work times
+    return allArbeitszeiten;  // Returns all work times, not filtered by badge
 }
 
-
-// Update the work time for a specific user
-export async function updateTime(userToken: string, startTime: Date, endTime: Date) {
-    // Find the existing work time record by name
-    const existingTime = await prisma.arbeitszeiten.findFirst({
-        where: {
-            badge: userToken,  // Assuming userId is the identifier in the table
-
-        },
+export async function updateTime(id: string, startTime: Date, endTime: Date, badge: string) {
+    // Ensure we update using a unique identifier (id)
+    const existingTime = await prisma.arbeitszeiten.findUnique({
+        where: { id },
     });
 
-    // If the record doesn't exist, throw an error
     if (!existingTime) {
         throw new Error('Work time record not found');
     }
 
-    // Update the record by its unique ID
     const updatedTime = await prisma.arbeitszeiten.update({
-        where: {
-            id: existingTime.id, // Use the ID of the found record
-        },
+        where: { id },
         data: {
             StartTime: startTime.toISOString(),
             EndTime: endTime.toISOString(),
+            badge: badge,  // Update the badge
         },
     });
 
     return updatedTime;
 }
 
-
 // Add a new work time entry for a specific user
-export async function addTime(startTime: Date, endTime: Date, userToken: string) {
+export async function addTime(startTime: Date, endTime: Date, badge: string) {
     const newTime = await prisma.arbeitszeiten.create({
         data: {
             StartTime: startTime.toISOString(),
             EndTime: endTime.toISOString(),
-            badge: userToken,  // Assuming userId is the identifier in the table
-
+            badge: badge,  // Set the badge
         },
     });
 
     return newTime;
 }
+
+export async function getuserbadge() {
+    // Fetch all users with badges assigned
+    const usersWithBadges = await prisma.pfleger.findMany({
+        where: {
+            badge: {
+                not: null,  // Ensures we're only fetching users with a badge
+            }
+        },
+        select: {
+            LastName: true,   // Assuming you're storing the user's last name
+            badge: true,   // Badge assigned to the user
+        },
+    });
+
+    return usersWithBadges;  // Return all users with badges
+}
+export async function deleteTime(id: string) {
+    const existingTime = await prisma.arbeitszeiten.findUnique({
+      where: { id },
+    });
+  
+    if (!existingTime) {
+      throw new Error('Work time record not found');
+    }
+  
+    await prisma.arbeitszeiten.delete({
+      where: { id },
+    });
+  
+    return { message: 'Work time deleted successfully' };
+  }

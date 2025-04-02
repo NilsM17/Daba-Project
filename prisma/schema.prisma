@@ -29,11 +29,12 @@ model Orte {
 }
 
 model Pfleger {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   FirstName   String
   LastName    String
   PLZ         String
   Phonenumber String
+  badge       String?
   created_at  String
 }
 
